@@ -1,4 +1,4 @@
-FROM golang:1.20-alpine as golang
+FROM golang:1.22.4-alpine as golang
 
 RUN apk add -U tzdata
 RUN apk --update add ca-certificates

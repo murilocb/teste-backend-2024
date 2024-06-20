@@ -2,6 +2,8 @@ version: '3'
 services:
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
+    hostname: zookeeper
+    container_name: zookeeper
     networks: 
       - broker-kafka
     environment:
@@ -10,6 +12,8 @@ services:
 
   kafka:
     image: confluentinc/cp-kafka:latest
+    hostname: kafka
+    container_name: kafka
     networks: 
       - broker-kafka
     depends_on:
@@ -28,6 +32,8 @@ services:
 
   kafdrop:
     image: obsidiandynamics/kafdrop:latest
+    hostname: kafdrop
+    container_name: kafdrop
     networks: 
       - broker-kafka
     depends_on:
@@ -56,14 +62,20 @@ services:
     container_name: ms_go_app
     depends_on:
       - kafka
+      - mongo
     networks: 
       - broker-kafka
     ports:
       - 3030:3030
 
-
+  mongo:
+    image: mongo:latest
+    container_name: mongodb
+    networks: 
+      - broker-kafka
+    ports:
+      - 27017:27017
 
 networks: 
   broker-kafka:
     driver: bridge
-

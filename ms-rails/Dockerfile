@@ -1,11 +1,12 @@
-FROM ruby:3.0.0-alpine3.13
+FROM ruby:3.3.3-alpine3.20
 
 LABEL maintainer="Matheus M<mmacedo@icasei.com.br>"
 
+RUN apk add --no-cache sqlite-libs
 RUN apk --update --upgrade add \
-      bash\
-      sqlite-dev\
-      build-base\
+      bash \
+      sqlite-dev \
+      build-base \
       tzdata
 
 ENV INSTALL_PATH /ms-rails
