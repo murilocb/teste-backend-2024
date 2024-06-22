@@ -2,6 +2,7 @@ package products
 
 import (
 	"context"
+	"log"
 	"ms-go/app/helpers"
 	"ms-go/app/models"
 	"ms-go/db"
@@ -42,6 +43,9 @@ func Create(data models.Product, isAPI bool) (*models.Product, error) {
 	defer db.Disconnect()
 
 	if isAPI {
+		if err := CreateOrUpdateKafka(&data); err != nil {
+			log.Printf("Failed to send product data to Kafka: %v\n", err)
+		}
 	}
 
 	return &data, nil

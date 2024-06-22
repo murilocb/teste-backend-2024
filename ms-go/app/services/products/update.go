@@ -2,6 +2,7 @@ package products
 
 import (
 	"context"
+	"log"
 	"ms-go/app/helpers"
 	"ms-go/app/models"
 	"ms-go/db"
@@ -38,6 +39,9 @@ func Update(data models.Product, isAPI bool) (*models.Product, error) {
 	defer db.Disconnect()
 
 	if isAPI {
+		if err := CreateOrUpdateKafka(&data); err != nil {
+			log.Printf("Failed to send product data to Kafka: %v\n", err)
+		}
 	}
 
 	return &product, nil
@@ -62,6 +66,10 @@ func setUpdate(new, old *models.Product) {
 
 	if new.Description == "" {
 		new.Description = old.Description
+	}
+
+	if new.Stock < 0 {
+		new.Stock = old.Stock
 	}
 
 	new.CreatedAt = old.CreatedAt
