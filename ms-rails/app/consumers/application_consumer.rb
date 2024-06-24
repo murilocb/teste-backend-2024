@@ -1,7 +1,7 @@
 class ApplicationConsumer < Karafka::BaseConsumer
   def consume
     messages.each do |message|
-      data = JSON.parse(message.payload)
+      data = message.payload
       Rails.logger.info("Processing message with data: #{data}")
 
       begin
@@ -13,8 +13,8 @@ class ApplicationConsumer < Karafka::BaseConsumer
             brand: data["brand"],
             price: data["price"],
             stock: data["stock"],
-            created_at: data["created_at"],
-            updated_at: data["updated_at"]
+            created_at: parse_timestamp(data["created_at"]),
+            updated_at: parse_timestamp(data["updated_at"])
           )
           product.save!
           Rails.logger.info("Product #{product.new_record? ? 'created' : 'updated'} with ID: #{product.id}")
@@ -24,5 +24,11 @@ class ApplicationConsumer < Karafka::BaseConsumer
         raise e
       end
     end
+  end
+
+  private
+
+  def parse_timestamp(timestamp_str)
+    Time.iso8601(timestamp_str) rescue nil
   end
 end

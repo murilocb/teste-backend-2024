@@ -28,7 +28,3 @@ class KarafkaApp < Karafka::App
     end
   end
 end
-
-# Karafka.monitor.subscribe('app.initialized') do
-#   Rails.logger.info("Karafka application initialized and ready")
-# end
